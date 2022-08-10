@@ -93,9 +93,9 @@ const getCurrentRequirements = async () => {
 };
 
 //执行
-(function () {
+(async function () {
   // @ts-ignore
-  getCurrentRequirements().then((r) => console.log("this is ok", r));
+  const requirementsList = await getCurrentRequirements();
 
   // layer.open({
   //   title: "hello",

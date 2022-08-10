@@ -119,9 +119,9 @@ SOFTWARE.
   }; //执行
 
 
-  (function () {
+  (async function () {
     // @ts-ignore
-    getCurrentRequirements().then(r => console.log("this is ok", r)); // layer.open({
+    await getCurrentRequirements(); // layer.open({
     //   title: "hello",
     //   type: 1,
     // });
