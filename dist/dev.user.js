@@ -5,7 +5,6 @@
 // @require     http://libs.baidu.com/jquery/1.8.3/jquery.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/layer.js
 // @resource    0 http://cdn.bootcdn.net/ajax/libs/layer/3.1.1/theme/default/layer.css
-// @match       https://www.google.com.hk/*
 // @match       https://aone.alibaba-inc.com/*
 // @version     0.0.1
 // @homepage    https://github.com/taotao7/Aone-Helper
