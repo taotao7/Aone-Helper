@@ -484,7 +484,7 @@ SOFTWARE.
 	      spaceIdentifier: userInfo.openId,
 	      category: "",
 	      toPage: 1,
-	      pageSize: 100,
+	      pageSize: 500,
 	      conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.openId}"],"toValue":null,"className":"user","format":"list"}]]}`,
 	      searchType: "LIST",
 	      groupCondition: '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
