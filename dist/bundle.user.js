@@ -9,7 +9,7 @@
 // @match       *team.aone.alibaba-inc.com/*
 // @match       *code.alibaba-inc.com/*
 // @match       *my.aone.alibaba-inc.com/*
-// @version     0.0.1
+// @version     0.0.2
 // @author      taotao7
 // @license     MIT
 // @grant       GM_log
@@ -485,7 +485,7 @@ SOFTWARE.
 	      category: "",
 	      toPage: 1,
 	      pageSize: 100,
-	      conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.opendId}"],"toValue":null,"className":"user","format":"list"}]]}`,
+	      conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.openId}"],"toValue":null,"className":"user","format":"list"}]]}`,
 	      searchType: "LIST",
 	      groupCondition: '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
 	      scope: "personal"

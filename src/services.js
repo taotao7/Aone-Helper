@@ -21,7 +21,7 @@ export const getCurrentRequirements = async () => {
         category: "",
         toPage: 1,
         pageSize: 100,
-        conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.opendId}"],"toValue":null,"className":"user","format":"list"}]]}`,
+        conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.openId}"],"toValue":null,"className":"user","format":"list"}]]}`,
         searchType: "LIST",
         groupCondition:
           '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
