@@ -1,16 +1,20 @@
-import { init } from "./utils";
-import { getCurrentRequirements } from "./services";
-import { controlPanel } from "./compontent/floatWin";
+import { getUrlRelativePath, init } from "./utils";
+import { codeStat, controlPanel } from "./compontent/floatWin";
 
 // 初始化tampermonkey变量
 init();
 
 //执行
 (async function () {
-  const requirementsList = await getCurrentRequirements();
-  console.log("123", requirementsList);
+  // aone 首页
+  if (getUrlRelativePath() === "/v2") {
+    controlPanel();
+  }
 
-  controlPanel();
+  // aone 代码页
+  if (getUrlRelativePath().includes("/my/profile")) {
+    codeStat();
+  }
 
   // layer.open({
   //   title: "hello",

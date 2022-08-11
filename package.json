@@ -50,5 +50,8 @@
   },
   "config": {
     "port": "8124"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.4"
   }
 }

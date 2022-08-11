@@ -10,10 +10,12 @@ export const init = () => {
     ".layui-layer-ico16,.layui-layer-loading.layui-layer-loading2{width:32px;height:32px;background:url(https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/theme/default/loading-2.gif)no-repeat;}.layui-layer-ico{background: url(https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/theme/default/icon.png) no-repeat;}"
   );
 
-  // @ts-ignore
-  unsafeWindow.layer = window.layer; // 把layer设置到原始window对象中
-  // @ts-ignore
-  unsafeWindow.csrf = window.csrfToken;
+  // // @ts-ignore
+  // unsafeWindow.layer = window.layer; // 把layer设置到原始window对象中
+  // // @ts-ignore
+  // unsafeWindow.csrfToken = window.csrfToken;
+  // // @ts-ignore
+  // unsafeWindow.profileUserInfo = window.profileUserInfo;
 };
 
 // 获取用户信息
@@ -23,7 +25,7 @@ export const getUserInfo = () => {
 };
 
 // 获取当前窗口相对路径
-export const GetUrlRelativePath = () => {
+export const getUrlRelativePath = () => {
   const url = document.location.toString();
   const arrUrl = url.split("//");
   const start = arrUrl[1].indexOf("/");
@@ -32,4 +34,15 @@ export const GetUrlRelativePath = () => {
     relUrl = relUrl.split("?")[0];
   }
   return relUrl;
+};
+
+// 根据需求返回需求名称和Aone名称
+export const getReqName = (reqList) => {
+  const nameList = [];
+  if (reqList.length > 0) {
+    reqList.forEach((i) => {
+      nameList.push(`${i.subject}-- aone id: ${i.identifier}`);
+    });
+  }
+  return nameList;
 };
