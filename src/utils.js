@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const init = () => {
   // @ts-ignore
   GM_addStyle(GM_getResourceText("0"));
@@ -38,10 +40,16 @@ export const getUrlRelativePath = () => {
 
 // 根据需求返回需求名称和Aone名称
 export const getReqName = (reqList) => {
+  // 上周天12点
+  const lastWeek = dayjs().add(-1, "week").day(6).valueOf();
+
   const nameList = [];
   if (reqList.length > 0) {
     reqList.forEach((i) => {
-      nameList.push(`${i.subject}-- aone id: ${i.identifier}`);
+      //大于上周天12点的
+      if (i.gmtModified > lastWeek) {
+        nameList.push(`${i.subject} -- aone id: ${i.identifier}`);
+      }
     });
   }
   return nameList;

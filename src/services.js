@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 // 获取当前周有变动需求
 export const getCurrentRequirements = async () => {
   const userInfo = getUserInfo();
-  const currentWeek = `${dayjs().day(1).format("YYYY-MM-DD ")}23:59:59`;
 
   return await request(
     "https://aone.alibaba-inc.com/v2/api/workitem/adapter/workitem/list?_input_charset=utf-8",
@@ -20,20 +19,46 @@ export const getCurrentRequirements = async () => {
         spaceType: "User",
         spaceIdentifier: userInfo.openId,
         category: "",
-        // toPage: 1,
+        toPage: 1,
         pageSize: 100,
-        conditions: `{\"conditionGroups\":[[{\"fieldIdentifier\":\"assignedTo\",\"operator\":\"CONTAINS\",\"value\":[\"${userInfo.openId}\"],\"toValue\":null,\"className\":\"user\",\"format\":\"list\"},{\"fieldIdentifier\":\"gmtModified\",\"operator\":\"MORE_THAN\",\"value\":[\"${currentWeek}\"],\"toValue\":null,\"className\":\"date\",\"format\":\"input\"},{\"fieldIdentifier\":\"updateStatusAt\",\"operator\":\"MORE_THAN\",\"value\":[\"${currentWeek}\"],\"toValue\":null,\"className\":\"date\",\"format\":\"input\"}]]}`,
+        conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.opendId}"],"toValue":null,"className":"user","format":"list"}]]}`,
         searchType: "LIST",
-        scope: "personal",
         groupCondition:
-          '{"fieldIdentifier": "category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
+          '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
+        scope: "personal",
       }),
     }
   );
 };
 
-// 代码页面统计
-export const getCodeStat = async () => {
+// 上月代码页面统计
+export const getLastMonthCodeStat = async () => {
+  let addLine = 0;
+  let delLine = 0;
+
+  // @ts-ignore
+  const lastMonth = dayjs().add(-1, "month").format("YYYY-MM");
+  const commitList = await request(
+    // @ts-ignore
+    `https://my.aone.alibaba-inc.com/my/profile/timeline/codeReviewAuthor?_input_charset=utf-8&type=codeReviewAuthor&queryTime=${lastMonth}&profileStaffId=${profileUserInfo.staffId}`
+  );
+
+  if (commitList?.repoSummaries) {
+    if (commitList?.repoSummaries) {
+      commitList?.repoSummaries.forEach((i) => {
+        i?.reviews.forEach((j) => {
+          addLine += j.addLineCount;
+          delLine += j.delLineCount;
+        });
+      });
+    }
+  }
+  console.log("123", addLine);
+  return { addLine, delLine };
+};
+
+// 上月代码页面统计
+export const getCurrentMonthCodeStat = async () => {
   let addLine = 0;
   let delLine = 0;
 

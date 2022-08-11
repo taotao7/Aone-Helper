@@ -1,5 +1,9 @@
 import { getReqName, getUserInfo } from "../utils";
-import { getCurrentRequirements, getCodeStat } from "../services";
+import {
+  getCurrentMonthCodeStat,
+  getCurrentRequirements,
+  getLastMonthCodeStat,
+} from "../services";
 import dayjs from "dayjs";
 
 // 操作面板操作
@@ -59,22 +63,29 @@ export const controlPanel = async () => {
     });
   });
 
-  $("#month").on('click', () => {
-    window.open("https://my.aone.alibaba-inc.com/my/profile")
-  })
+  $("#month").on("click", () => {
+    window.open("https://my.aone.alibaba-inc.com/my/profile");
+  });
 };
 
 // 代码页面 aone code page
 export const codeStat = async () => {
-  const stat = await getCodeStat();
+  const lastStat = await getLastMonthCodeStat();
+  const currentStat = await getCurrentMonthCodeStat();
   const currentMonth = dayjs().format("MM");
+  const lastMonth = dayjs().add(-1, "month").format("MM");
 
   // @ts-ignore
   layer.open({
-    title: `${currentMonth}月commit情况`,
+    title: `${lastMonth}--${currentMonth}月commit情况`,
     content: `<div>
-      <div>添加行: ${stat.addLine}<div>
-      <div>删除行: ${stat.delLine}<div>
+      <h3>${currentMonth} 月</h3>
+      <div>添加行: ${currentStat.addLine}<div>
+      <div>删除行: ${currentStat.delLine}<div>
+
+      <h3>${lastMonth} 月</h3>
+      <div>添加行: ${lastStat.addLine}<div>
+      <div>删除行: ${lastStat.delLine}<div>
     <div>`,
     shade: 0,
     anim: 2,
