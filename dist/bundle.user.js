@@ -9,7 +9,7 @@
 // @match       *team.aone.alibaba-inc.com/*
 // @match       *code.alibaba-inc.com/*
 // @match       *my.aone.alibaba-inc.com/*
-// @version     0.0.2
+// @version     0.0.3
 // @author      taotao7
 // @license     MIT
 // @grant       GM_log
