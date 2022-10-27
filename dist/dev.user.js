@@ -9,7 +9,8 @@
 // @match       *team.aone.alibaba-inc.com/*
 // @match       *code.alibaba-inc.com/*
 // @match       *my.aone.alibaba-inc.com/*
-// @version     0.0.1
+// @match       *ati.alibaba-inc.com/*
+// @version     0.0.3
 // @homepage    https://github.com/taotao7/Aone-Helper
 // @author      taotao7
 // @license     MIT

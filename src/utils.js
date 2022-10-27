@@ -23,7 +23,7 @@ export const init = () => {
 // 获取用户信息
 export const getUserInfo = () => {
   // @ts-ignore
-  return JSON.parse(window.localStorage.getItem("TB_USER"));
+  return window.localStorage.getItem("aoneHelper");
 };
 
 // 获取当前窗口相对路径

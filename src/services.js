@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 // 获取当前周有变动需求
 export const getCurrentRequirements = async () => {
-  const userInfo = getUserInfo();
+  const id = getUserInfo();
 
   return await request(
     "https://aone.alibaba-inc.com/v2/api/workitem/adapter/workitem/list?_input_charset=utf-8",
@@ -17,11 +17,11 @@ export const getCurrentRequirements = async () => {
       dataType: "json",
       data: JSON.stringify({
         spaceType: "User",
-        spaceIdentifier: userInfo.openId,
+        spaceIdentifier: id,
         category: "",
         toPage: 1,
         pageSize: 500,
-        conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.openId}"],"toValue":null,"className":"user","format":"list"}]]}`,
+        conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${id}"],"toValue":null,"className":"user","format":"list"}]]}`,
         searchType: "LIST",
         groupCondition:
           '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',

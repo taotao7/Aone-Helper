@@ -12,7 +12,8 @@
     "*aone.alibaba-inc.com/*",
     "*team.aone.alibaba-inc.com/*",
     "*code.alibaba-inc.com/*",
-    "*my.aone.alibaba-inc.com/*"
+    "*my.aone.alibaba-inc.com/*",
+    "*ati.alibaba-inc.com/*"
   ],
   "grant": [
     "GM_log",

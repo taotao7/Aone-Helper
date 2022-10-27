@@ -9,6 +9,7 @@
 // @match       *team.aone.alibaba-inc.com/*
 // @match       *code.alibaba-inc.com/*
 // @match       *my.aone.alibaba-inc.com/*
+// @match       *ati.alibaba-inc.com/*
 // @version     0.0.3
 // @author      taotao7
 // @license     MIT
@@ -406,7 +407,7 @@ SOFTWARE.
 
 	const getUserInfo = () => {
 	  // @ts-ignore
-	  return JSON.parse(window.localStorage.getItem("TB_USER"));
+	  return window.localStorage.getItem("aoneHelper");
 	}; // 获取当前窗口相对路径
 
 	const getUrlRelativePath = () => {
@@ -471,7 +472,7 @@ SOFTWARE.
 	};
 
 	const getCurrentRequirements = async () => {
-	  const userInfo = getUserInfo();
+	  const id = getUserInfo();
 	  return await request("https://aone.alibaba-inc.com/v2/api/workitem/adapter/workitem/list?_input_charset=utf-8", {
 	    method: "POST",
 	    contentType: "application/json",
@@ -481,11 +482,11 @@ SOFTWARE.
 	    dataType: "json",
 	    data: JSON.stringify({
 	      spaceType: "User",
-	      spaceIdentifier: userInfo.openId,
+	      spaceIdentifier: id,
 	      category: "",
 	      toPage: 1,
 	      pageSize: 500,
-	      conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${userInfo.openId}"],"toValue":null,"className":"user","format":"list"}]]}`,
+	      conditions: `{"conditionGroups":[[{"fieldIdentifier":"assignedTo","operator":"CONTAINS","value":["${id}"],"toValue":null,"className":"user","format":"list"}]]}`,
 	      searchType: "LIST",
 	      groupCondition: '{"fieldIdentifier":"category","className":"category","format":"list","value":["Req"],"operator":"EQUALS"}',
 	      scope: "personal"
@@ -585,58 +586,63 @@ SOFTWARE.
     `; // 显示本周工作 aone /v2
 
 	const controlPanel = async () => {
-	  const requirementsList = await getCurrentRequirements();
-	  const userInfo = getUserInfo();
-	  const nameList = getReqName(requirementsList?.result); // @ts-ignore
+	  try {
+	    const requirementsList = await getCurrentRequirements();
+	    const id = getUserInfo();
+	    const nameList = getReqName(requirementsList?.result); // @ts-ignore
 
-	  layer.open({
-	    type: 1,
-	    title: "操作面板",
-	    // @ts-ignore
-	    maxHeight: $(window).height() - 300,
-	    closeBtn: 0,
-	    content,
-	    shade: 0,
-	    anim: 2,
-	    offset: "r"
-	  });
-	  $("#week").on("click", () => {
-	    // @ts-ignore
 	    layer.open({
-	      title: "本周需求",
-	      area: "400px",
-	      content: `
+	      type: 1,
+	      title: "操作面板",
+	      // @ts-ignore
+	      maxHeight: $(window).height() - 300,
+	      closeBtn: 0,
+	      content,
+	      shade: 0,
+	      anim: 2,
+	      offset: "r"
+	    });
+	    $("#week").on("click", () => {
+	      // @ts-ignore
+	      layer.open({
+	        title: "本周需求",
+	        area: "400px",
+	        content: `
       <ul style="display:block;margin-left:30px" class="site-dir layui-layer-wrap">
         ${nameList.map(i => `<li>${i}</li>`)}
       </ul>
       `,
-	      shade: 0,
-	      anim: 2,
-	      btn: ["复制"],
-	      yes: (index, _) => {
-	        // 复制到剪切板
-	        navigator.clipboard.writeText(nameList.toString()).then(() => {
-	          window.open(`https://team.aone.alibaba-inc.com/inventory/${userInfo.openId}`); // @ts-ignore
+	        shade: 0,
+	        anim: 2,
+	        btn: ["复制"],
+	        yes: (index, _) => {
+	          // 复制到剪切板
+	          navigator.clipboard.writeText(nameList.toString()).then(() => {
+	            window.open(`https://team.aone.alibaba-inc.com/inventory/${id}`); // @ts-ignore
 
-	          layer.close(index);
-	        });
-	      }
+	            layer.close(index);
+	          });
+	        }
+	      });
 	    });
-	  });
-	  $("#month").on("click", () => {
-	    window.open("https://my.aone.alibaba-inc.com/my/profile");
-	  });
+	    $("#month").on("click", () => {
+	      window.open("https://my.aone.alibaba-inc.com/my/profile");
+	    });
+	  } catch (e) {
+	    console.log("123---->", e);
+	  }
 	}; // 代码页面 aone code page
 
 	const codeStat = async () => {
-	  const lastStat = await getLastMonthCodeStat();
-	  const currentStat = await getCurrentMonthCodeStat();
-	  const currentMonth = dayjs().format("MM");
-	  const lastMonth = dayjs().add(-1, "month").format("MM"); // @ts-ignore
+	  try {
+	    const lastStat = await getLastMonthCodeStat();
+	    const currentStat = await getCurrentMonthCodeStat();
+	    const currentMonth = dayjs().format("MM");
+	    const lastMonth = dayjs().add(-1, "month").format("MM"); // @ts-ignore
 
-	  layer.open({
-	    title: `${lastMonth}--${currentMonth}月commit情况`,
-	    content: `<div>
+	    layer.open({
+	      title: `${lastMonth}--${currentMonth}月commit情况`,
+	      content: `<div>
       <h3>${currentMonth} 月</h3>
       <div>添加行: ${currentStat.addLine}<div>
       <div>删除行: ${currentStat.delLine}<div>
@@ -645,22 +651,44 @@ SOFTWARE.
       <div>添加行: ${lastStat.addLine}<div>
       <div>删除行: ${lastStat.delLine}<div>
     <div>`,
-	    shade: 0,
-	    anim: 2
-	  });
+	      shade: 0,
+	      anim: 2
+	    });
+	  } catch (e) {
+	    console.log("123---->", e);
+	  }
 	};
+
+	const check = () => {
+	  // 检测是否输入了id
+	  if (!window.localStorage.getItem("aoneHelper")) {
+	    layer.prompt({
+	      type: 1,
+	      title: "输入你的ID例如WBxxxxxx",
+	      value: "输入后会保存在localstorage"
+	    }, (v, i) => {
+	      window.localStorage.setItem("aoneHelper", v);
+	      layer.close(i);
+	      location.reload();
+	    });
+	    return;
+	  }
+	}; // 初始化tampermonkey变量
+
 
 	init(); //执行
 
 	(async function () {
 	  // aone 首页
 	  if (getUrlRelativePath() === "/v2") {
-	    controlPanel();
+	    check();
+	    await controlPanel();
 	  } // aone 代码页
 
 
 	  if (getUrlRelativePath().includes("/my/profile")) {
-	    codeStat();
+	    check();
+	    await codeStat();
 	  } // layer.open({
 	  //   title: "hello",
 	  //   type: 1,
