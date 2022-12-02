@@ -9,7 +9,7 @@ const request = (url, options) => {
         // 默认一定要带的
         request.setRequestHeader("bx-v", "2.2.2");
         // @ts-ignore
-        request.setRequestHeader("x-csrf-token", csrfToken);
+        // request.setRequestHeader("x-csrf-token", csrfToken);
 
         // 如果添加了options且带headers
         if (options?.headers) {

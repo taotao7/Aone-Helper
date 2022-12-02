@@ -10,7 +10,7 @@
 // @match       *code.alibaba-inc.com/*
 // @match       *my.aone.alibaba-inc.com/*
 // @match       *ati.alibaba-inc.com/*
-// @version     0.0.3
+// @version     0.0.4
 // @author      taotao7
 // @license     MIT
 // @grant       GM_log
@@ -450,8 +450,8 @@ SOFTWARE.
 	      beforeSend: request => {
 	        // 默认一定要带的
 	        request.setRequestHeader("bx-v", "2.2.2"); // @ts-ignore
-
-	        request.setRequestHeader("x-csrf-token", csrfToken); // 如果添加了options且带headers
+	        // request.setRequestHeader("x-csrf-token", csrfToken);
+	        // 如果添加了options且带headers
 
 	        if (options?.headers) {
 	          Object.keys(options.headers).forEach(i => {
@@ -498,19 +498,21 @@ SOFTWARE.
 	  let addLine = 0;
 	  let delLine = 0; // @ts-ignore
 
-	  const lastMonth = dayjs().add(-1, "month").format("YYYY-MM");
-	  const commitList = await request( // @ts-ignore
-	  `https://my.aone.alibaba-inc.com/my/profile/timeline/codeReviewAuthor?_input_charset=utf-8&type=codeReviewAuthor&queryTime=${lastMonth}&profileStaffId=${profileUserInfo.staffId}`);
+	  const lastMonthStart = dayjs().startOf("month").subtract(1, "month").format("YYYY-MM-DD");
+	  const lastMonthEnd = dayjs().endOf("month").subtract(1, "month").format("YYYY-MM-DD"); // .format("YYYY-MM");
 
-	  if (commitList?.repoSummaries) {
-	    if (commitList?.repoSummaries) {
-	      commitList?.repoSummaries.forEach(i => {
-	        i?.reviews.forEach(j => {
-	          addLine += j.addLineCount;
-	          delLine += j.delLineCount;
-	        });
+	  console.log("123--->", lastMonthStart);
+	  console.log("123--->", lastMonthEnd);
+	  const commitList = await request( // @ts-ignore
+	  `https://ati-app.alibaba-inc.com/open/personal/activities?startDate=${lastMonthStart}+00:00:00&endDate=${lastMonthEnd}+00:00:00&empId=${getUserInfo()}`);
+
+	  if (commitList?.data?.crAuthor?.repo_summary_list) {
+	    commitList.data.crAuthor.repo_summary_list.forEach(i => {
+	      i?.review_list.forEach(j => {
+	        addLine += j.add_line_count;
+	        delLine += j.del_line_count;
 	      });
-	    }
+	    });
 	  }
 
 	  console.log("123", addLine);
@@ -518,25 +520,24 @@ SOFTWARE.
 	    addLine,
 	    delLine
 	  };
-	}; // 上月代码页面统计
+	}; // 本月代码页面统计
 
 	const getCurrentMonthCodeStat = async () => {
 	  let addLine = 0;
 	  let delLine = 0; // @ts-ignore
 
-	  const currentMonth = dayjs().format("YYYY-MM");
+	  const monthStart = dayjs().startOf("month").format("YYYY-MM-DD");
+	  const monthEnd = dayjs().endOf("month").format("YYYY-MM-DD");
 	  const commitList = await request( // @ts-ignore
-	  `https://my.aone.alibaba-inc.com/my/profile/timeline/codeReviewAuthor?_input_charset=utf-8&type=codeReviewAuthor&queryTime=${currentMonth}&profileStaffId=${profileUserInfo.staffId}`);
+	  `https://ati-app.alibaba-inc.com/open/personal/activities?startDate=${monthStart}+00:00:00&endDate=${monthEnd}+00:00:00&empId=${getUserInfo()}`);
 
-	  if (commitList?.repoSummaries) {
-	    if (commitList?.repoSummaries) {
-	      commitList?.repoSummaries.forEach(i => {
-	        i?.reviews.forEach(j => {
-	          addLine += j.addLineCount;
-	          delLine += j.delLineCount;
-	        });
+	  if (commitList?.data?.crAuthor?.repo_summary_list) {
+	    commitList.data.crAuthor.repo_summary_list.forEach(i => {
+	      i?.review_list.forEach(j => {
+	        addLine += j.add_line_count;
+	        delLine += j.del_line_count;
 	      });
-	    }
+	    });
 	  }
 
 	  return {
@@ -626,7 +627,7 @@ SOFTWARE.
 	      });
 	    });
 	    $("#month").on("click", () => {
-	      window.open("https://my.aone.alibaba-inc.com/my/profile");
+	      window.open("https://ati.alibaba-inc.com/person");
 	    });
 	  } catch (e) {
 	    console.log("123---->", e);
@@ -686,7 +687,7 @@ SOFTWARE.
 	  } // aone 代码页
 
 
-	  if (getUrlRelativePath().includes("/my/profile")) {
+	  if (getUrlRelativePath().includes("/person")) {
 	    check();
 	    await codeStat();
 	  } // layer.open({

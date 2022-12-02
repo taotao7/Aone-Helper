@@ -62,7 +62,7 @@ export const controlPanel = async () => {
     });
 
     $("#month").on("click", () => {
-      window.open("https://my.aone.alibaba-inc.com/my/profile");
+      window.open("https://ati.alibaba-inc.com/person");
     });
   } catch (e) {
     console.log("123---->", e);

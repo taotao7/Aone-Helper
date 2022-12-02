@@ -33,7 +33,7 @@ init();
   }
 
   // aone 代码页
-  if (getUrlRelativePath().includes("/my/profile")) {
+  if (getUrlRelativePath().includes("/person")) {
     check();
     await codeStat();
   }

@@ -55,14 +55,17 @@ export const getLastMonthCodeStat = async () => {
     // @ts-ignore
     `https://ati-app.alibaba-inc.com/open/personal/activities?startDate=${lastMonthStart}+00:00:00&endDate=${lastMonthEnd}+00:00:00&empId=${getUserInfo()}`
   );
+  console.log("123---->", commitList);
 
-  if (commitList?.data?.crAuthor?.repo_summary_list) {
-    commitList.data.crAuthor.repo_summary_list.forEach((i) => {
-      i?.review_list.forEach((j) => {
-        addLine += j.add_line_count;
-        delLine += j.del_line_count;
+  if (commitList?.repoSummaries) {
+    if (commitList?.repoSummaries) {
+      commitList?.repoSummaries.forEach((i) => {
+        i?.reviews.forEach((j) => {
+          addLine += j.addLineCount;
+          delLine += j.delLineCount;
+        });
       });
-    });
+    }
   }
   console.log("123", addLine);
   return { addLine, delLine };
@@ -74,22 +77,30 @@ export const getCurrentMonthCodeStat = async () => {
   let delLine = 0;
 
   // @ts-ignore
-  const monthStart = dayjs().startOf("month").format("YYYY-MM-DD");
+  const lastMonthStart = dayjs()
+    .startOf("month")
+    .subtract(1, "month")
+    .format("YYYY-MM-DD");
 
-  const monthEnd = dayjs().endOf("month").format("YYYY-MM-DD");
+  const lastMonthEnd = dayjs()
+    .endOf("month")
+    .subtract(1, "month")
+    .format("YYYY-MM-DD");
 
   const commitList = await request(
     // @ts-ignore
     `https://ati-app.alibaba-inc.com/open/personal/activities?startDate=${monthStart}+00:00:00&endDate=${monthEnd}+00:00:00&empId=${getUserInfo()}`
   );
 
-  if (commitList?.data?.crAuthor?.repo_summary_list) {
-    commitList.data.crAuthor.repo_summary_list.forEach((i) => {
-      i?.review_list.forEach((j) => {
-        addLine += j.add_line_count;
-        delLine += j.del_line_count;
+  if (commitList?.repoSummaries) {
+    if (commitList?.repoSummaries) {
+      commitList?.repoSummaries.forEach((i) => {
+        i?.reviews.forEach((j) => {
+          addLine += j.addLineCount;
+          delLine += j.delLineCount;
+        });
       });
-    });
+    }
   }
   return { addLine, delLine };
 };
